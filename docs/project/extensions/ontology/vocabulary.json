@@ -1,0 +1,117 @@
+{
+  "vocabulary": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Словарь терминов онтологии проекта FEONT"
+    },
+    "terms": [
+      {
+        "term": "Организационная структура",
+        "uri": "feont:OrganizationalStructure",
+        "type": "class",
+        "definition": "Организационная единица, представляющая структуру организации",
+        "examples": [
+          "Отдел разработки",
+          "Управление качеством",
+          "Проектный офис"
+        ],
+        "related_terms": ["feont:Department", "feont:Position"]
+      },
+      {
+        "term": "Техническая структура",
+        "uri": "feont:TechnicalStructure",
+        "type": "class",
+        "definition": "Техническая система, компонент или техническая единица",
+        "examples": [
+          "Система сигнализации",
+          "Локомотив",
+          "Станция"
+        ],
+        "related_terms": ["feont:TechnicalSystem", "feont:Component"]
+      },
+      {
+        "term": "План работ",
+        "uri": "feont:WorkPlan",
+        "type": "class",
+        "definition": "План работ, связанный с организационными или техническими структурами",
+        "examples": [
+          "План технического обслуживания",
+          "План развития отдела",
+          "Проектный план"
+        ],
+        "related_terms": ["feont:Task", "feont:Project"]
+      },
+      {
+        "term": "Отдел",
+        "uri": "feont:Department",
+        "type": "class",
+        "definition": "Подразделение организации",
+        "parent": "feont:OrganizationalStructure",
+        "properties": [
+          "feont:hasName",
+          "feont:hasManager",
+          "feont:hasEmployees"
+        ]
+      },
+      {
+        "term": "Должность",
+        "uri": "feont:Position",
+        "type": "class",
+        "definition": "Должность в организации",
+        "parent": "feont:OrganizationalStructure",
+        "properties": [
+          "feont:hasTitle",
+          "feont:belongsToDepartment",
+          "feont:hasResponsibilities"
+        ]
+      },
+      {
+        "term": "Техническая система",
+        "uri": "feont:TechnicalSystem",
+        "type": "class",
+        "definition": "Техническая система, состоящая из компонентов",
+        "parent": "feont:TechnicalStructure",
+        "properties": [
+          "feont:hasName",
+          "feont:hasComponents",
+          "feont:hasDependencies"
+        ]
+      },
+      {
+        "term": "Компонент",
+        "uri": "feont:Component",
+        "type": "class",
+        "definition": "Компонент технической системы",
+        "parent": "feont:TechnicalStructure",
+        "properties": [
+          "feont:hasName",
+          "feont:partOf",
+          "feont:hasSpecifications"
+        ]
+      },
+      {
+        "term": "Задача",
+        "uri": "feont:Task",
+        "type": "class",
+        "definition": "Задача в рамках плана работ",
+        "parent": "feont:WorkPlan",
+        "properties": [
+          "feont:hasTitle",
+          "feont:hasStatus",
+          "feont:hasAssignee",
+          "feont:hasDeadline"
+        ]
+      }
+    ],
+    "notes": {
+      "description": "Примечания к словарю",
+      "guidelines": [
+        "Словарь будет расширяться по мере развития онтологии",
+        "Все термины должны иметь определения",
+        "Связанные термины должны быть указаны",
+        "Примеры помогают понять использование терминов"
+      ]
+    }
+  }
+}

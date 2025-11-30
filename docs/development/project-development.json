@@ -1,0 +1,20 @@
+{
+  "development": {
+    "metadata": {
+      "version": "2.0.0",
+      "created": "2025-11-30",
+      "lastUpdated": "2025-11-30",
+      "description": "Планирование разработки FEONT"
+    },
+    "tasks": {
+      "description": "Словарь всех задач проекта",
+      "nextTaskId": "0001",
+      "items": {}
+    },
+    "structure": {
+      "description": "Иерархическая структура пунктов задач",
+      "trees": []
+    }
+  }
+}
+

@@ -1,0 +1,88 @@
+{
+  "docker": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Docker конфигурация для развёртывания FEONT"
+    },
+    "compose": {
+      "version": "3.8",
+      "services": {
+        "fuseki": {
+          "image": "apache/jena-fuseki:latest",
+          "container_name": "feont-fuseki",
+          "ports": [
+            "3030:3030"
+          ],
+          "volumes": [
+            "fuseki-data:/fuseki/databases",
+            "fuseki-config:/fuseki/configuration",
+            "./data/tdb2:/fuseki/databases/tdb2"
+          ],
+          "environment": [
+            "FUSEKI_DATASET_NAME=ds",
+            "FUSEKI_START=--update --mem --tdb2 /fuseki/databases/tdb2"
+          ],
+          "restart": "unless-stopped",
+          "healthcheck": {
+            "test": "curl -f http://localhost:3030/$/ping || exit 1",
+            "interval": "30s",
+            "timeout": "10s",
+            "retries": "3"
+          }
+        }
+      },
+      "volumes": {
+        "fuseki-data": {
+          "driver": "local",
+          "description": "Данные Fuseki (TDB2 хранилище)"
+        },
+        "fuseki-config": {
+          "driver": "local",
+          "description": "Конфигурация Fuseki"
+        }
+      }
+    },
+    "networks": {
+      "feont-network": {
+        "driver": "bridge",
+        "description": "Сеть для контейнеров FEONT"
+      }
+    },
+    "deployment": {
+      "development": {
+        "description": "Конфигурация для development окружения",
+        "environment": "development",
+        "volumes": {
+          "type": "bind",
+          "source": "./data/tdb2",
+          "target": "/fuseki/databases/tdb2"
+        },
+        "ports": {
+          "expose": [3030]
+        }
+      },
+      "production": {
+        "description": "Конфигурация для production окружения (будет уточнена при необходимости)",
+        "note": "Настройки production будут добавлены при развёртывании в production"
+      }
+    },
+    "files": {
+      "docker-compose.yml": {
+        "path": "code/docker/docker-compose.yml",
+        "description": "Основной файл Docker Compose",
+        "status": "planned"
+      },
+      "fuseki-config.ttl": {
+        "path": "code/docker/fuseki/config.ttl",
+        "description": "Конфигурационный файл Fuseki в формате Turtle",
+        "status": "planned"
+      },
+      "fuseki-shiro.ini": {
+        "path": "code/docker/fuseki/shiro.ini",
+        "description": "Файл конфигурации безопасности (опционально)",
+        "status": "optional"
+      }
+    }
+  }
+}

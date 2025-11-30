@@ -1,0 +1,60 @@
+{
+  "prefixes": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Определение RDF префиксов для проекта FEONT"
+    },
+    "project": {
+      "feont": {
+        "uri": "http://example.org/feont/",
+        "description": "Префикс проекта FEONT для всех классов и свойств проекта",
+        "usage": "Основной префикс для доменных классов и свойств"
+      }
+    },
+    "standard": {
+      "rdf": {
+        "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "description": "RDF основные классы и свойства",
+        "usage": "rdf:type, rdf:Property и другие базовые RDF конструкции"
+      },
+      "rdfs": {
+        "uri": "http://www.w3.org/2000/01/rdf-schema#",
+        "description": "RDF Schema для описания классов и иерархий",
+        "usage": "rdfs:Class, rdfs:subClassOf, rdfs:label, rdfs:comment"
+      },
+      "owl": {
+        "uri": "http://www.w3.org/2002/07/owl#",
+        "description": "OWL 2 для расширенного описания онтологии",
+        "usage": "owl:Class, owl:ObjectProperty, owl:DatatypeProperty, owl:restriction"
+      },
+      "sh": {
+        "uri": "http://www.w3.org/ns/shacl#",
+        "description": "SHACL для валидации данных",
+        "usage": "sh:NodeShape, sh:PropertyShape, sh:targetClass, sh:path"
+      },
+      "xsd": {
+        "uri": "http://www.w3.org/2001/XMLSchema#",
+        "description": "XML Schema типы данных для литералов",
+        "usage": "xsd:string, xsd:integer, xsd:decimal, xsd:date, xsd:boolean"
+      }
+    },
+    "turtle_notation": [
+      "@prefix feont: <http://example.org/feont/> .",
+      "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .",
+      "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .",
+      "@prefix owl: <http://www.w3.org/2002/07/owl#> .",
+      "@prefix sh: <http://www.w3.org/ns/shacl#> .",
+      "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> ."
+    ],
+    "usage_guidelines": {
+      "description": "Рекомендации по использованию префиксов",
+      "rules": [
+        "Всегда использовать стандартные префиксы (rdf, rdfs, owl, sh, xsd)",
+        "Использовать feont: для всех классов и свойств проекта",
+        "Не создавать новые префиксы без необходимости",
+        "Документировать новые префиксы при добавлении"
+      ]
+    }
+  }
+}

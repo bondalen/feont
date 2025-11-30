@@ -1,0 +1,88 @@
+{
+  "fuseki": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Конфигурация Apache Jena Fuseki для проекта FEONT"
+    },
+    "server": {
+      "port": 3030,
+      "host": "localhost",
+      "protocol": "http",
+      "description": "Базовые настройки Fuseki сервера"
+    },
+    "datasets": [
+      {
+        "name": "ds",
+        "description": "Основной dataset для проекта FEONT",
+        "type": "tdb2",
+        "path": "data/tdb2/",
+        "named_graphs": [
+          {
+            "uri": "urn:ontology",
+            "description": "Схема/онтология"
+          },
+          {
+            "uri": "urn:data",
+            "description": "Экземпляры данных"
+          },
+          {
+            "uri": "urn:shacl:shapes",
+            "description": "SHACL shapes для валидации"
+          },
+          {
+            "uri": "urn:ontology:history",
+            "description": "История изменений онтологии"
+          },
+          {
+            "uri": "urn:validation:results",
+            "description": "Результаты валидации"
+          }
+        ],
+        "endpoints": {
+          "sparql": "/ds/sparql",
+          "update": "/ds/update",
+          "query": "/ds/query",
+          "data": "/ds/data"
+        }
+      }
+    ],
+    "configuration": {
+      "tdb2": {
+        "type": "TDB2",
+        "location": "data/tdb2/",
+        "unionDefaultGraph": true,
+        "description": "Настройки TDB2 хранилища"
+      },
+      "shacl": {
+        "enabled": true,
+        "validationOnUpdate": true,
+        "logResults": true,
+        "resultsGraph": "urn:validation:results",
+        "description": "Настройки SHACL валидации"
+      },
+      "reasoning": {
+        "enabled": false,
+        "type": "rdfs",
+        "description": "Логический вывод (опционально, по умолчанию отключен)"
+      }
+    },
+    "security": {
+      "authentication": {
+        "enabled": false,
+        "description": "Аутентификация (опционально, для development отключена)"
+      },
+      "cors": {
+        "enabled": true,
+        "allowedOrigins": ["http://localhost:8080", "http://localhost:9000"],
+        "description": "CORS настройки для development"
+      }
+    },
+    "performance": {
+      "queryTimeout": 300,
+      "updateTimeout": 300,
+      "cacheSize": 1000,
+      "description": "Настройки производительности"
+    }
+  }
+}

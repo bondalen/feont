@@ -1,0 +1,125 @@
+{
+  "modules": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Структура модулей приложения FEONT"
+    },
+    "structure": {
+      "description": "Модули организованы по функциональности и технологиям",
+      "modules": [
+        {
+          "id": "frontend",
+          "name": "Frontend",
+          "description": "Frontend приложение на Vue.js 3 + Quasar Framework",
+          "path": "code/frontend/",
+          "technologies": [
+            "Vue.js 3",
+            "Quasar Framework",
+            "TypeScript (опционально)"
+          ],
+          "components": [
+            {
+              "name": "OntologyEditor",
+              "description": "Компонент для редактирования онтологии",
+              "path": "code/frontend/src/components/OntologyEditor.vue",
+              "status": "planned"
+            },
+            {
+              "name": "GraphVisualization",
+              "description": "Компонент визуализации графа знаний",
+              "path": "code/frontend/src/components/GraphVisualization.vue",
+              "status": "planned",
+              "libraries": ["Cytoscape.js"]
+            },
+            {
+              "name": "SPARQLQueryEditor",
+              "description": "Редактор SPARQL запросов",
+              "path": "code/frontend/src/components/SPARQLQueryEditor.vue",
+              "status": "planned",
+              "libraries": ["YASGUI"]
+            },
+            {
+              "name": "OntologyViewer",
+              "description": "Визуализация структуры онтологии",
+              "path": "code/frontend/src/components/OntologyViewer.vue",
+              "status": "planned",
+              "libraries": ["WebVOWL"]
+            },
+            {
+              "name": "DynamicForm",
+              "description": "Динамическая генерация форм на основе SHACL shapes",
+              "path": "code/frontend/src/components/DynamicForm.vue",
+              "status": "planned",
+              "libraries": ["@formkit/vue"]
+            }
+          ],
+          "services": [
+            {
+              "name": "SPARQLService",
+              "description": "Сервис для работы с SPARQL endpoint",
+              "path": "code/frontend/src/services/sparql.service.ts",
+              "status": "planned"
+            },
+            {
+              "name": "RDFService",
+              "description": "Сервис для работы с RDF данными",
+              "path": "code/frontend/src/services/rdf.service.ts",
+              "status": "planned",
+              "libraries": ["rdflib.js", "n3"]
+            },
+            {
+              "name": "OntologyService",
+              "description": "Сервис для работы с онтологией",
+              "path": "code/frontend/src/services/ontology.service.ts",
+              "status": "planned"
+            }
+          ]
+        },
+        {
+          "id": "backend",
+          "name": "Backend",
+          "description": "Backend компоненты (опционально, если требуется дополнительный REST API)",
+          "path": "code/backend/",
+          "status": "optional",
+          "technologies": [
+            "Java (опционально)",
+            "Spring Boot (опционально)"
+          ],
+          "note": "Основной функционал предоставляется через Apache Jena Fuseki SPARQL endpoint. Backend может использоваться для дополнительной логики или интеграций."
+        },
+        {
+          "id": "infrastructure",
+          "name": "Infrastructure",
+          "description": "Инфраструктурные компоненты (Docker, конфигурации)",
+          "path": "code/docker/",
+          "components": [
+            {
+              "name": "FusekiContainer",
+              "description": "Docker контейнер для Apache Jena Fuseki",
+              "path": "code/docker/fuseki/",
+              "status": "planned"
+            },
+            {
+              "name": "DockerCompose",
+              "description": "Docker Compose конфигурация",
+              "path": "code/docker/docker-compose.yml",
+              "status": "planned"
+            }
+          ]
+        }
+      ]
+    },
+    "dependencies": {
+      "description": "Зависимости между модулями",
+      "relationships": [
+        {
+          "from": "frontend",
+          "to": "infrastructure",
+          "type": "uses",
+          "description": "Frontend использует Fuseki через SPARQL endpoint"
+        }
+      ]
+    }
+  }
+}

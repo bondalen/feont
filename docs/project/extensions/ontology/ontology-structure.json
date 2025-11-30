@@ -1,0 +1,149 @@
+{
+  "ontology_structure": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-11-30T20:30:00Z",
+      "description": "Структура онтологии проекта FEONT",
+      "base_uri": "http://example.org/feont/",
+      "note": "Онтология динамически изменяемая, структура будет расширяться по мере развития проекта"
+    },
+    "main_concepts": [
+      {
+        "name": "Организационные структуры",
+        "uri": "feont:OrganizationalStructure",
+        "description": "Организационные единицы, подразделения, должности, иерархии",
+        "classes": [
+          {
+            "uri": "feont:Organization",
+            "label": "Организация",
+            "description": "Корневая организационная единица"
+          },
+          {
+            "uri": "feont:Department",
+            "label": "Отдел",
+            "description": "Подразделение организации",
+            "parent": "feont:OrganizationalStructure"
+          },
+          {
+            "uri": "feont:Position",
+            "label": "Должность",
+            "description": "Должность в организации",
+            "parent": "feont:OrganizationalStructure"
+          }
+        ]
+      },
+      {
+        "name": "Технические структуры",
+        "uri": "feont:TechnicalStructure",
+        "description": "Технические системы, компоненты, их связи и зависимости",
+        "classes": [
+          {
+            "uri": "feont:TechnicalSystem",
+            "label": "Техническая система",
+            "description": "Техническая система, состоящая из компонентов",
+            "parent": "feont:TechnicalStructure"
+          },
+          {
+            "uri": "feont:Component",
+            "label": "Компонент",
+            "description": "Компонент технической системы",
+            "parent": "feont:TechnicalStructure"
+          }
+        ]
+      },
+      {
+        "name": "Планы работ",
+        "uri": "feont:WorkPlan",
+        "description": "Планы работ, задачи, связанные с организационными и техническими структурами",
+        "classes": [
+          {
+            "uri": "feont:Plan",
+            "label": "План",
+            "description": "План работ",
+            "parent": "feont:WorkPlan"
+          },
+          {
+            "uri": "feont:Task",
+            "label": "Задача",
+            "description": "Задача в рамках плана",
+            "parent": "feont:WorkPlan"
+          },
+          {
+            "uri": "feont:Project",
+            "label": "Проект",
+            "description": "Проект, включающий планы и задачи",
+            "parent": "feont:WorkPlan"
+          }
+        ]
+      }
+    ],
+    "properties": {
+      "description": "Основные свойства онтологии (будет расширяться)",
+      "object_properties": [
+        {
+          "uri": "feont:belongsTo",
+          "label": "принадлежит",
+          "description": "Связь принадлежности",
+          "domain": "rdfs:Resource",
+          "range": "rdfs:Resource"
+        },
+        {
+          "uri": "feont:hasPart",
+          "label": "имеет часть",
+          "description": "Связь целое-часть",
+          "domain": "rdfs:Resource",
+          "range": "rdfs:Resource"
+        },
+        {
+          "uri": "feont:relatedTo",
+          "label": "связан с",
+          "description": "Общая связь между сущностями",
+          "domain": "rdfs:Resource",
+          "range": "rdfs:Resource"
+        }
+      ],
+      "datatype_properties": [
+        {
+          "uri": "feont:hasName",
+          "label": "имеет имя",
+          "description": "Имя сущности",
+          "domain": "rdfs:Resource",
+          "range": "xsd:string"
+        },
+        {
+          "uri": "feont:hasDescription",
+          "label": "имеет описание",
+          "description": "Описание сущности",
+          "domain": "rdfs:Resource",
+          "range": "xsd:string"
+        }
+      ]
+    },
+    "relationships": {
+      "description": "Основные типы связей между классами",
+      "hierarchical": [
+        {
+          "parent": "feont:OrganizationalStructure",
+          "children": ["feont:Department", "feont:Position"]
+        },
+        {
+          "parent": "feont:TechnicalStructure",
+          "children": ["feont:TechnicalSystem", "feont:Component"]
+        },
+        {
+          "parent": "feont:WorkPlan",
+          "children": ["feont:Plan", "feont:Task", "feont:Project"]
+        }
+      ]
+    },
+    "notes": {
+      "description": "Важные замечания",
+      "points": [
+        "Онтология находится в стадии разработки",
+        "Структура будет изменяться по мере развития проекта",
+        "Все изменения фиксируются в журнале разработки",
+        "История изменений хранится в Named Graph urn:ontology:history"
+      ]
+    }
+  }
+}
