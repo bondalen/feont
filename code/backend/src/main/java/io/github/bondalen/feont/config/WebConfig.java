@@ -21,7 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Статические ресурсы frontend
+        // SPARQL endpoints имеют приоритет
+        // Статические ресурсы frontend для остальных запросов
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true);
@@ -29,10 +30,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * Настройка fallback на index.html для SPA роутинга
+     * 
+     * Примечание: SPARQL endpoints (/ds/**) обрабатываются контроллерами,
+     * остальные запросы перенаправляются на index.html
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Все не-SPARQL запросы перенаправляются на index.html для SPA
+        // Только корневой путь перенаправляется на index.html
+        // SPARQL endpoints обрабатываются через SparqlController
         registry.addViewController("/").setViewName("forward:/index.html");
     }
 }

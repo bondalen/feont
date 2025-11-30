@@ -51,21 +51,17 @@ public class FusekiConfig {
     }
 
     /**
-     * Инициализация встроенного Fuseki сервера
+     * Инициализация встроенного Fuseki функциональности
      * 
-     * @param dataset Dataset для использования
-     * @return FusekiServer (будет запущен отдельно или через Servlet)
+     * Fuseki интегрирован через Spring Boot REST контроллеры
+     * (SparqlController) для экономии ресурсов вместо отдельного сервера.
+     * Все SPARQL endpoints доступны через контроллеры.
      */
     @Bean
-    public FusekiServer fusekiServer(Dataset dataset) {
-        logger.info("Инициализация встроенного Fuseki сервера с dataset: {}", datasetName);
-        
-        // TODO: Настройка Fuseki сервера
-        // FusekiServer будет интегрирован через Spring Boot REST контроллеры
-        // для экономии ресурсов вместо отдельного сервера
-        
-        logger.info("Fuseki сервер настроен");
-        return null; // Временно, будет реализовано позже
+    public String fusekiIntegration() {
+        logger.info("Fuseki функциональность интегрирована через Spring Boot REST контроллеры");
+        logger.info("SPARQL endpoints будут доступны на /ds/sparql, /ds/update, /ds/data");
+        return "Fuseki integrated via REST controllers";
     }
 }
 

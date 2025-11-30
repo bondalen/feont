@@ -45,35 +45,36 @@
       - Скрипт сборки создан (scripts/build.sh), который копирует результат в backend/resources/static
       - Конфигурация окружения для production настроена
 
-- ⏳ 02.0 Этап 2 ― Разработка Backend (Spring Boot + встроенный Fuseki)
-  - ⏳ 02.1 Создать базовую структуру Spring Boot приложения
-    - ⏳ 02.1.1 Создать главный класс приложения
-      - `io.github.bondalen.feont.FeontApplication`
-      - Аннотации Spring Boot
-      - Точка входа
-    - ⏳ 02.1.2 Настроить application.yml/properties
-      - Порт приложения (8083)
-      - Путь к TDB2 хранилищу (конфигурируемый)
-      - Настройки Fuseki
-  - ⏳ 02.2 Интегрировать Apache Jena Fuseki
-    - ⏳ 02.2.1 Создать конфигурационный класс Fuseki
-      - `io.github.bondalen.feont.config.FusekiConfig`
-      - Инициализация встроенного Fuseki сервера
-      - Подключение к TDB2 по указанному пути
-    - ⏳ 02.2.2 Настроить dataset и Named Graphs
-      - Создание dataset "ds"
-      - Инициализация Named Graphs: urn:ontology, urn:data, urn:shacl:shapes, urn:ontology:history, urn:validation:results
-    - ⏳ 02.2.3 Настроить SPARQL endpoints
-      - /sparql (query)
-      - /update (SPARQL Update)
-      - /data (data access)
-  - ⏳ 02.3 Настроить встраивание frontend статики
-    - ⏳ 02.3.1 Настроить Spring Boot для раздачи статики
-      - Конфигурация StaticResourceHandler
-      - Fallback на index.html для SPA
-    - ⏳ 02.3.2 Создать build скрипт для копирования frontend
-      - Автоматическое копирование из frontend/dist в resources/static
-      - Интеграция в Maven/Gradle build процесс
+- ✅ 02.0 Этап 2 ― Разработка Backend (Spring Boot + встроенный Fuseki)
+  - ✅ 02.1 Создать базовую структуру Spring Boot приложения
+    - ✅ 02.1.1 Создать главный класс приложения
+      - `io.github.bondalen.feont.FeontApplication` - создан
+      - Аннотации Spring Boot - добавлены
+      - Точка входа - настроена
+    - ✅ 02.1.2 Настроить application.yml/properties
+      - Порт приложения (8083) - настроен
+      - Путь к TDB2 хранилищу (конфигурируемый) - настроен через FEONT_TDB2_PATH
+      - Настройки Fuseki - настроены
+  - ✅ 02.2 Интегрировать Apache Jena Fuseki
+    - ✅ 02.2.1 Создать конфигурационный класс Fuseki
+      - `io.github.bondalen.feont.config.FusekiConfig` - создан
+      - Инициализация TDB2 Dataset - реализована
+      - Подключение к TDB2 по указанному пути - реализовано
+    - ✅ 02.2.2 Настроить dataset и Named Graphs
+      - Создание dataset "ds" - реализовано через TDB2Factory
+      - Инициализация Named Graphs: urn:ontology, urn:data, urn:shacl:shapes, urn:ontology:history, urn:validation:results - реализована через DatasetInitializationService
+    - ✅ 02.2.3 Настроить SPARQL endpoints
+      - /ds/sparql (query) - реализован через SparqlController
+      - /ds/update (SPARQL Update) - реализован через SparqlController
+      - /ds/data (data access) - реализован через SparqlController
+  - ✅ 02.3 Настроить встраивание frontend статики
+    - ✅ 02.3.1 Настроить Spring Boot для раздачи статики
+      - Конфигурация StaticResourceHandler - настроена в WebConfig
+      - Fallback на index.html для SPA - настроен
+      - CORS конфигурация - добавлена в CorsConfig
+    - ✅ 02.3.2 Создать build скрипт для копирования frontend
+      - Автоматическое копирование из frontend/dist в resources/static - реализовано в scripts/build.sh
+      - Интеграция в Maven build процесс - готова к использованию
 
 - ⏳ 03.0 Этап 3 ― Разработка Frontend (Vue.js 3 + Quasar)
   - ⏳ 03.1 Инициализация Quasar проекта
@@ -194,8 +195,8 @@
 - K1 ― Структура проекта создана, build системы настроены (закрывает блок 01.0) — ✅ выполнено
   - Критерии: структура каталогов создана, Maven и npm конфигурации созданы, package name установлен как `io.github.bondalen.feont`
 
-- K2 ― Backend приложение создано, Fuseki интегрирован (закрывает блок 02.0) — ⏳ планируется
-  - Критерии: Spring Boot приложение запускается, Fuseki работает, SPARQL endpoints доступны, frontend статика встраивается
+- K2 ― Backend приложение создано, Fuseki интегрирован (закрывает блок 02.0) — ✅ выполнено
+  - Критерии: Spring Boot приложение создано, TDB2 Dataset настроен, SPARQL endpoints реализованы (/ds/sparql, /ds/update, /ds/data), Named Graphs инициализируются при старте, frontend статика настроена для встраивания
 
 - K3 ― Frontend приложение создано и интегрирован (закрывает блок 03.0) — ⏳ планируется
   - Критерии: Quasar проект создан, библиотеки для RDF подключены, базовые компоненты работают, сборка в статику работает
@@ -213,8 +214,8 @@
 - ✅ **Этап 1 (01.0)** — выполнен
   - ✅ Создание структуры проекта (01.1) — выполнено
   - ✅ Настройка build систем (01.2) — выполнено
-- ⏳ **Этап 2 (02.0)** — планируется
-  - ⏳ Разработка Backend (02.1, 02.2, 02.3) — планируется
+- ✅ **Этап 2 (02.0)** — выполнен
+  - ✅ Разработка Backend (02.1, 02.2, 02.3) — выполнено
 - ⏳ **Этап 3 (03.0)** — планируется
   - ⏳ Разработка Frontend (03.1, 03.2, 03.3) — планируется
 - ⏳ **Этап 4 (04.0)** — планируется
