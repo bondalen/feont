@@ -38,8 +38,18 @@ build_backend() {
     
     # Сборка Maven
     mvn clean package -DskipTests
-    echo ">>> Backend собран успешно!"
-    echo "JAR файл: backend/target/feont-1.0.0-SNAPSHOT.jar"
+    
+    # Проверка результата
+    JAR_FILE="$PROJECT_ROOT/backend/target/feont-1.0.0-SNAPSHOT.jar"
+    if [ -f "$JAR_FILE" ]; then
+        JAR_SIZE=$(du -h "$JAR_FILE" | cut -f1)
+        echo ">>> Backend собран успешно!"
+        echo "JAR файл: $JAR_FILE"
+        echo "Размер: $JAR_SIZE"
+    else
+        echo "Ошибка: JAR файл не найден после сборки!"
+        exit 1
+    fi
 }
 
 # Функция сборки frontend
@@ -61,8 +71,15 @@ build_frontend() {
     # Сборка Quasar
     npm run build
     
-    echo ">>> Frontend собран успешно!"
-    echo "Результат: frontend/dist/spa/"
+    # Проверка результата
+    if [ -d "$PROJECT_ROOT/frontend/dist/spa" ]; then
+        echo ">>> Frontend собран успешно!"
+        echo "Результат: frontend/dist/spa/"
+        echo "Файлов: $(find ../frontend/dist/spa -type f | wc -l)"
+    else
+        echo "Ошибка: Frontend не собран! Папка dist/spa не найдена."
+        exit 1
+    fi
 }
 
 # Обработка аргументов

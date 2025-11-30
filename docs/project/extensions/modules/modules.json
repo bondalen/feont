@@ -2,7 +2,7 @@
   "modules": {
     "metadata": {
       "version": "1.0.0",
-      "lastUpdated": "2025-11-30T20:30:00Z",
+      "lastUpdated": "2025-11-30T18:36:22Z",
       "description": "Структура модулей приложения FEONT"
     },
     "structure": {
@@ -20,91 +20,166 @@
           ],
           "components": [
             {
-              "name": "OntologyEditor",
-              "description": "Компонент для редактирования онтологии",
-              "path": "code/frontend/src/components/OntologyEditor.vue",
-              "status": "planned"
+              "name": "EssentialLink",
+              "description": "Компонент навигации",
+              "path": "code/frontend/src/components/EssentialLink.vue",
+              "status": "implemented"
             },
             {
-              "name": "GraphVisualization",
+              "name": "IndexPage",
+              "description": "Главная страница приложения",
+              "path": "code/frontend/src/pages/IndexPage.vue",
+              "status": "implemented"
+            },
+            {
+              "name": "SparqlPage",
+              "description": "Страница для выполнения SPARQL запросов",
+              "path": "code/frontend/src/pages/SparqlPage.vue",
+              "status": "implemented",
+              "features": ["SELECT", "CONSTRUCT", "ASK", "DESCRIBE"]
+            },
+            {
+              "name": "GraphPage",
               "description": "Компонент визуализации графа знаний",
-              "path": "code/frontend/src/components/GraphVisualization.vue",
-              "status": "planned",
-              "libraries": ["Cytoscape.js"]
+              "path": "code/frontend/src/pages/GraphPage.vue",
+              "status": "implemented",
+              "libraries": ["Cytoscape.js", "cytoscape-dagre"],
+              "note": "Базовая реализация, требует доработки парсинга RDF"
             },
             {
-              "name": "SPARQLQueryEditor",
-              "description": "Редактор SPARQL запросов",
-              "path": "code/frontend/src/components/SPARQLQueryEditor.vue",
-              "status": "planned",
-              "libraries": ["YASGUI"]
+              "name": "OntologyPage",
+              "description": "Страница отображения структуры онтологии",
+              "path": "code/frontend/src/pages/OntologyPage.vue",
+              "status": "implemented"
             },
             {
-              "name": "OntologyViewer",
-              "description": "Визуализация структуры онтологии",
-              "path": "code/frontend/src/components/OntologyViewer.vue",
-              "status": "planned",
-              "libraries": ["WebVOWL"]
+              "name": "MainLayout",
+              "description": "Главный layout с навигацией",
+              "path": "code/frontend/src/layouts/MainLayout.vue",
+              "status": "implemented"
             },
             {
-              "name": "DynamicForm",
-              "description": "Динамическая генерация форм на основе SHACL shapes",
-              "path": "code/frontend/src/components/DynamicForm.vue",
-              "status": "planned",
-              "libraries": ["@formkit/vue"]
+              "name": "ErrorNotFound",
+              "description": "Страница 404",
+              "path": "code/frontend/src/pages/ErrorNotFound.vue",
+              "status": "implemented"
             }
           ],
           "services": [
             {
               "name": "SPARQLService",
               "description": "Сервис для работы с SPARQL endpoint",
-              "path": "code/frontend/src/services/sparql.service.ts",
-              "status": "planned"
-            },
-            {
-              "name": "RDFService",
-              "description": "Сервис для работы с RDF данными",
-              "path": "code/frontend/src/services/rdf.service.ts",
-              "status": "planned",
-              "libraries": ["rdflib.js", "n3"]
-            },
-            {
-              "name": "OntologyService",
-              "description": "Сервис для работы с онтологией",
-              "path": "code/frontend/src/services/ontology.service.ts",
-              "status": "planned"
+              "path": "code/frontend/src/services/sparql.service.js",
+              "status": "implemented",
+              "methods": ["executeSelect", "executeConstruct", "executeAsk", "executeDescribe", "executeUpdate", "getGraphData", "getNamedGraphs"]
             }
           ]
         },
         {
           "id": "backend",
           "name": "Backend",
-          "description": "Backend компоненты (опционально, если требуется дополнительный REST API)",
+          "description": "Spring Boot приложение с встроенным Apache Jena Fuseki",
           "path": "code/backend/",
-          "status": "optional",
+          "status": "implemented",
           "technologies": [
-            "Java (опционально)",
-            "Spring Boot (опционально)"
+            "Java 21",
+            "Spring Boot 3.2.0",
+            "Apache Jena 4.9.0 (Fuseki, TDB2, SHACL)"
           ],
-          "note": "Основной функционал предоставляется через Apache Jena Fuseki SPARQL endpoint. Backend может использоваться для дополнительной логики или интеграций."
+          "package": "io.github.bondalen.feont",
+          "components": [
+            {
+              "name": "FeontApplication",
+              "description": "Главный класс Spring Boot приложения",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/FeontApplication.java",
+              "status": "implemented"
+            },
+            {
+              "name": "FusekiConfig",
+              "description": "Конфигурация встроенного Fuseki и TDB2",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/config/FusekiConfig.java",
+              "status": "implemented"
+            },
+            {
+              "name": "SparqlController",
+              "description": "REST контроллер для SPARQL endpoints (/ds/sparql, /ds/update, /ds/data)",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/controller/SparqlController.java",
+              "status": "implemented"
+            },
+            {
+              "name": "SparqlService",
+              "description": "Сервис для выполнения SPARQL запросов и обновлений",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/service/SparqlService.java",
+              "status": "implemented"
+            },
+            {
+              "name": "DatasetInitializationService",
+              "description": "Сервис инициализации Named Graphs при старте",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/service/DatasetInitializationService.java",
+              "status": "implemented"
+            },
+            {
+              "name": "WebConfig",
+              "description": "Конфигурация веб-слоя и статики",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/config/WebConfig.java",
+              "status": "implemented"
+            },
+            {
+              "name": "CorsConfig",
+              "description": "Конфигурация CORS для frontend",
+              "path": "code/backend/src/main/java/io/github/bondalen/feont/config/CorsConfig.java",
+              "status": "implemented"
+            }
+          ]
         },
         {
           "id": "infrastructure",
           "name": "Infrastructure",
-          "description": "Инфраструктурные компоненты (Docker, конфигурации)",
-          "path": "code/docker/",
+          "description": "Инфраструктурные компоненты (скрипты развёртывания, конфигурации)",
+          "path": "code/scripts/",
           "components": [
             {
-              "name": "FusekiContainer",
-              "description": "Docker контейнер для Apache Jena Fuseki",
-              "path": "code/docker/fuseki/",
-              "status": "planned"
+              "name": "BuildScripts",
+              "description": "Скрипты сборки проекта",
+              "path": "code/scripts/build.sh",
+              "status": "implemented"
+            },
+            {
+              "name": "DeploymentScripts",
+              "description": "Скрипты развёртывания на сервере",
+              "path": "code/scripts/deploy.sh, update.sh, full-deploy.sh",
+              "status": "implemented"
+            },
+            {
+              "name": "TestScripts",
+              "description": "Скрипты тестирования",
+              "path": "code/scripts/test-local.sh, check-build.sh",
+              "status": "implemented"
+            },
+            {
+              "name": "SetupScripts",
+              "description": "Скрипты настройки сервера",
+              "path": "code/scripts/prepare-server.sh, setup-systemd.sh, setup-nginx.sh",
+              "status": "implemented"
+            },
+            {
+              "name": "SystemdService",
+              "description": "Systemd service файл для автозапуска",
+              "path": "code/scripts/feont.service",
+              "status": "implemented"
+            },
+            {
+              "name": "NginxConfig",
+              "description": "Конфигурация Nginx reverse proxy",
+              "path": "code/scripts/nginx-feont.conf",
+              "status": "implemented"
             },
             {
               "name": "DockerCompose",
-              "description": "Docker Compose конфигурация",
+              "description": "Docker Compose конфигурация (опционально)",
               "path": "code/docker/docker-compose.yml",
-              "status": "planned"
+              "status": "implemented",
+              "note": "Опциональный контейнер для данных, не используется для экономии ресурсов"
             }
           ]
         }

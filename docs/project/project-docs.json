@@ -6,8 +6,8 @@
       "description": "Приложение для работы с графом знаний: организационные структуры, технические структуры, планы работ",
       "author": "Александр",
       "created": "2025-11-30",
-      "lastUpdated": "2025-11-30T20:00:00Z",
-      "status": "planning",
+      "lastUpdated": "2025-11-30T18:36:22Z",
+      "status": "development",
       "documentationRules": "docs/project-documentation-rules.md"
     },
     "architecture": {
@@ -15,10 +15,10 @@
       "pattern": "knowledge-graph-based",
       "description": "Приложение на основе графа знаний (RDF) с динамической схемой (SHACL)",
       "backend": {
-        "framework": "Apache Jena Fuseki (standalone) + Java (Spring Boot - опционально)",
-        "language": "Java (опционально)",
+        "framework": "Spring Boot с встроенным Apache Jena Fuseki",
+        "language": "Java 21",
         "storage": "Apache Jena TDB2 (triple store)",
-        "api": "SPARQL 1.1, REST API (опционально)",
+        "api": "SPARQL 1.1 через REST API (Spring Boot контроллеры)",
         "validation": "Apache Jena SHACL",
         "reasoning": "Apache Jena Inference (RDFS/OWL) - опционально"
       },
@@ -69,26 +69,53 @@
         "storage": "Apache Jena TDB2",
         "sparql_server": "Apache Jena Fuseki",
         "deployment": {
-          "strategy": "Docker-based deployment",
-          "approach": "Единый Docker образ с Fuseki и всеми необходимыми компонентами",
-          "containers": [
-            {
-              "name": "fuseki",
-              "description": "Apache Jena Fuseki сервер с TDB2 хранилищем",
-              "ports": ["3030:3030"],
-              "volumes": ["data/tdb2:/fuseki/databases"]
-            }
-          ],
+          "strategy": "JAR-based deployment с разделением данных",
+          "approach": "Единый Spring Boot JAR файл с встроенным Fuseki и frontend статикой. Данные TDB2 хранятся отдельно на хосте для сохранности при обновлениях.",
+          "architecture": {
+            "application": "Единый JAR файл (~50-100MB) включает Spring Boot, встроенный Fuseki, frontend статику",
+            "data": "TDB2 хранилище на хосте: /home/user1/feont/data/tdb2/",
+            "container": "Опциональный минимальный контейнер для данных (не используется для экономии ресурсов)"
+          },
+          "build": {
+            "frontend": "Quasar build -> frontend/dist/spa/",
+            "backend": "Maven package с копированием frontend статики в resources/static/",
+            "result": "backend/target/feont-1.0.0-SNAPSHOT.jar"
+          },
+          "server": {
+            "host": "176.108.244.252",
+            "user": "user1",
+            "directory": "/home/user1/feont",
+            "port": 8083,
+            "service": "systemd (feont.service)",
+            "proxy": "Nginx reverse proxy"
+          },
+          "scripts": {
+            "build": "scripts/build.sh",
+            "deploy": "scripts/deploy.sh",
+            "update": "scripts/update.sh",
+            "full-deploy": "scripts/full-deploy.sh",
+            "test-local": "scripts/test-local.sh",
+            "check-build": "scripts/check-build.sh",
+            "prepare-server": "scripts/prepare-server.sh",
+            "setup-systemd": "scripts/setup-systemd.sh",
+            "setup-nginx": "scripts/setup-nginx.sh"
+          },
           "environments": {
             "development": {
               "description": "Локальная разработка",
-              "fuseki_url": "http://localhost:3030",
-              "datasets": ["ds"],
-              "sparql_endpoint": "http://localhost:3030/ds/sparql"
+              "port": 8083,
+              "tdb2_path": "./data/tdb2",
+              "sparql_endpoint": "http://localhost:8083/ds/sparql",
+              "profile": "dev"
             },
             "production": {
-              "description": "Production окружение (если применимо)",
-              "note": "Конфигурация будет уточнена при необходимости развёртывания"
+              "description": "Production окружение",
+              "port": 8083,
+              "tdb2_path": "/home/user1/feont/data/tdb2",
+              "sparql_endpoint": "http://176.108.244.252/ds/sparql",
+              "profile": "prod",
+              "nginx": "Reverse proxy на порту 80/443",
+              "service": "systemd автозапуск"
             }
           }
         },
@@ -115,7 +142,7 @@
     "ontology": {
       "description": "Онтология проекта (динамически изменяемая в реальном времени)",
       "version": "0.1.0",
-      "lastUpdated": "2025-11-30T20:00:00Z",
+      "lastUpdated": "2025-11-30T18:36:22Z",
       "base_uri": "http://example.org/feont/",
       "dynamic_schema": true,
       "note": "Онтология может изменяться в процессе эксплуатации без миграций. Изменения фиксируются в urn:ontology:history.",

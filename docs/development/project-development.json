@@ -3,18 +3,110 @@
     "metadata": {
       "version": "2.0.0",
       "created": "2025-11-30",
-      "lastUpdated": "2025-11-30",
+      "lastUpdated": "2025-11-30T19:50:00Z",
       "description": "Планирование разработки FEONT"
     },
     "tasks": {
       "description": "Словарь всех задач проекта",
-      "nextTaskId": "0001",
-      "items": {}
+      "nextTaskId": "0006",
+      "items": {
+        "0001": {
+          "id": "0001",
+          "title": "Подготовка структуры проекта и конфигурации",
+          "description": "Создание структуры каталогов, настройка build систем (Maven, npm), конфигурация проектов",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "setup"
+        },
+        "0002": {
+          "id": "0002",
+          "title": "Разработка Backend (Spring Boot + встроенный Fuseki)",
+          "description": "Создание Spring Boot приложения с встроенным Apache Jena Fuseki, настройка TDB2, реализация SPARQL endpoints, инициализация Named Graphs",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "development"
+        },
+        "0003": {
+          "id": "0003",
+          "title": "Разработка Frontend (Vue.js 3 + Quasar)",
+          "description": "Создание Quasar проекта, интеграция библиотек для RDF, реализация компонентов для работы с SPARQL и визуализации графов",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "development"
+        },
+        "0004": {
+          "id": "0004",
+          "title": "Конфигурация развёртывания на сервере",
+          "description": "Создание скриптов для подготовки сервера, настройка systemd service, настройка Nginx reverse proxy",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "deployment"
+        },
+        "0005": {
+          "id": "0005",
+          "title": "Сборка и развёртывание",
+          "description": "Автоматизация сборки проекта, локальное тестирование, скрипты развёртывания и обновления",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "deployment"
+        },
+        "0006": {
+          "id": "0006",
+          "title": "Документация и финализация",
+          "description": "Обновление документации проекта, обновление JSON файлов, создание резюме работы",
+          "status": "completed",
+          "created": "2025-11-30",
+          "completed": "2025-11-30",
+          "type": "documentation"
+        }
+      }
     },
     "structure": {
       "description": "Иерархическая структура пунктов задач",
-      "trees": []
+      "trees": [
+        {
+          "id": "tree-001",
+          "title": "Разработка и развёртывание FEONT",
+          "description": "Основной процесс разработки приложения",
+          "items": [
+            {
+              "taskId": "0001",
+              "title": "Подготовка структуры проекта",
+              "children": []
+            },
+            {
+              "taskId": "0002",
+              "title": "Разработка Backend",
+              "children": []
+            },
+            {
+              "taskId": "0003",
+              "title": "Разработка Frontend",
+              "children": []
+            },
+            {
+              "taskId": "0004",
+              "title": "Конфигурация развёртывания",
+              "children": []
+            },
+            {
+              "taskId": "0005",
+              "title": "Сборка и развёртывание",
+              "children": []
+            },
+            {
+              "taskId": "0006",
+              "title": "Документация и финализация",
+              "children": []
+            }
+          ]
+        }
+      ]
     }
   }
 }
-

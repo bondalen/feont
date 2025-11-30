@@ -1,0 +1,20 @@
+[Unit]
+Description=FEONT - Knowledge Graph Application
+After=network.target
+
+[Service]
+Type=simple
+User=user1
+WorkingDirectory=/home/user1/feont
+Environment="FEONT_TDB2_PATH=/home/user1/feont/data/tdb2"
+Environment="JAVA_OPTS=-Xmx1G -Xms512M"
+ExecStart=/usr/bin/java \$JAVA_OPTS -jar /home/user1/feont/feont-1.0.0.jar --spring.profiles.active=prod
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=feont
+
+[Install]
+WantedBy=multi-user.target
+
