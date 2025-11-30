@@ -19,7 +19,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'i18n',
-      'axios',
+      'axios'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -57,7 +57,11 @@ module.exports = configure(function (ctx) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        SPARQL_ENDPOINT: process.env.VUE_APP_SPARQL_ENDPOINT || 'http://localhost:8083/ds/sparql',
+        UPDATE_ENDPOINT: process.env.VUE_APP_UPDATE_ENDPOINT || 'http://localhost:8083/ds/update',
+        DATA_ENDPOINT: process.env.VUE_APP_DATA_ENDPOINT || 'http://localhost:8083/ds/data'
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
