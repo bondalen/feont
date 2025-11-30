@@ -1,0 +1,26 @@
+# Конфигурация для production окружения
+
+spring:
+  application:
+    name: feont
+
+server:
+  port: 8083
+
+feont:
+  tdb2:
+    # В production путь задаётся через переменную окружения FEONT_TDB2_PATH
+    # По умолчанию: /home/user1/feont/data/tdb2
+    path: ${FEONT_TDB2_PATH:/home/user1/feont/data/tdb2}
+  
+  fuseki:
+    dataset-name: ds
+
+logging:
+  level:
+    root: INFO
+    io.github.bondalen.feont: INFO
+    org.apache.jena: WARN
+  file:
+    name: /home/user1/feont/logs/feont.log
+

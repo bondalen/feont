@@ -1,0 +1,29 @@
+version: '3.8'
+
+# Docker Compose конфигурация для FEONT
+# 
+# Примечание: Основное приложение развёртывается как JAR файл.
+# Этот файл создан для опционального использования минимального контейнера данных,
+# но рекомендуется вариант без контейнера для максимальной экономии ресурсов.
+
+services:
+  # Опциональный контейнер для данных (не рекомендуется для production)
+  # Используется только для изоляции данных, если это критично
+  feont-data:
+    image: busybox:latest
+    container_name: feont-data
+    volumes:
+      - ../data/tdb2:/data/tdb2
+    command: tail -f /dev/null
+    restart: unless-stopped
+    networks:
+      - feont-network
+
+networks:
+  feont-network:
+    driver: bridge
+
+# Примечание по использованию:
+# Для экономии ресурсов рекомендуется не использовать контейнер для данных,
+# а хранить TDB2 напрямую на хосте: /home/user1/feont/data/tdb2/
+

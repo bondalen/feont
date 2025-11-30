@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: feont
+  
+server:
+  port: 8083
+  servlet:
+    context-path: /
+
+# Конфигурация FEONT
+feont:
+  tdb2:
+    # Путь к хранилищу TDB2 (можно переопределить через переменную окружения FEONT_TDB2_PATH)
+    path: ${FEONT_TDB2_PATH:./data/tdb2}
+  
+  fuseki:
+    dataset-name: ds
+    port: 8083
+    # SPARQL endpoints будут доступны через Spring Boot на том же порту
+    
+  named-graphs:
+    ontology: urn:ontology
+    data: urn:data
+    shacl: urn:shacl:shapes
+    history: urn:ontology:history
+    validation: urn:validation:results
+
+# Логирование
+logging:
+  level:
+    root: INFO
+    io.github.bondalen.feont: DEBUG
+    org.apache.jena: INFO
+    org.springframework: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+

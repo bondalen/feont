@@ -1,0 +1,23 @@
+# Конфигурация для локальной разработки
+
+spring:
+  application:
+    name: feont-dev
+
+server:
+  port: 8083
+
+feont:
+  tdb2:
+    # Для разработки используется локальная директория
+    path: ./data/tdb2
+  
+  fuseki:
+    dataset-name: ds
+
+logging:
+  level:
+    root: INFO
+    io.github.bondalen.feont: DEBUG
+    org.apache.jena: DEBUG
+
