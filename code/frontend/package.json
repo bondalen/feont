@@ -18,7 +18,7 @@
     "@formkit/vue": "^1.5.1",
     "cytoscape": "^3.27.0",
     "cytoscape-dagre": "^2.5.0",
-    "rdflib": "^2.7.1",
+    "rdflib": "^2.3.0",
     "n3": "^1.20.1",
     "jsonld": "^8.3.2",
     "axios": "^1.6.0"
