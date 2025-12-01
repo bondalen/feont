@@ -19,6 +19,9 @@ build/
 *.war
 *.ear
 
+# Frontend build artifacts (copied to backend)
+code/backend/src/main/resources/static/
+
 # Dependencies
 node_modules/
 .pnp
