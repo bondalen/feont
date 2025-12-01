@@ -2,7 +2,7 @@
   "modules": {
     "metadata": {
       "version": "1.0.0",
-      "lastUpdated": "2025-11-30T18:36:22Z",
+      "lastUpdated": "2025-12-01T19:06:50Z",
       "description": "Структура модулей приложения FEONT"
     },
     "structure": {
@@ -110,13 +110,15 @@
               "name": "SparqlService",
               "description": "Сервис для выполнения SPARQL запросов и обновлений",
               "path": "code/backend/src/main/java/io/github/bondalen/feont/service/SparqlService.java",
-              "status": "implemented"
+              "status": "implemented",
+              "note": "Обновлён для использования транзакций TDB2 (ReadWrite.READ для чтения, ReadWrite.WRITE для записи)"
             },
             {
               "name": "DatasetInitializationService",
               "description": "Сервис инициализации Named Graphs при старте",
               "path": "code/backend/src/main/java/io/github/bondalen/feont/service/DatasetInitializationService.java",
-              "status": "implemented"
+              "status": "implemented",
+              "note": "Обновлён для использования транзакций TDB2 (ReadWrite.WRITE) для корректной инициализации Named Graphs"
             },
             {
               "name": "WebConfig",

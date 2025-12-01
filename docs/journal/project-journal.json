@@ -3,7 +3,7 @@
     "metadata": {
       "version": "1.0.0",
       "status": "active",
-      "lastUpdated": "2025-11-30T18:36:22Z"
+      "lastUpdated": "2025-12-01T19:06:50Z"
     },
     "sessions": [
       {
@@ -99,6 +99,68 @@
         "references": [
           "chat-plan-25-1130-deployment.md",
           "project-docs.json",
+          "modules.json"
+        ]
+      },
+      {
+        "id": "session-2025-12-01-launch",
+        "date": "2025-12-01",
+        "title": "Запуск приложения и исправление проблем",
+        "description": "Подготовка окружения, сборка frontend и backend, запуск приложения, исправление проблем с транзакциями TDB2 и конфликтом библиотек логирования",
+        "duration": "несколько часов",
+        "participants": ["Александр"],
+        "objectives": [
+          "Подготовить окружение для запуска приложения",
+          "Собрать frontend и backend",
+          "Запустить приложение и проверить работу",
+          "Исправить обнаруженные проблемы"
+        ],
+        "completedTasks": [
+          "0007 - Запуск приложения и исправление проблем"
+        ],
+        "decisions": [
+          {
+            "decision": "Использование системного свойства для обхода конфликта логирования",
+            "reason": "Конфликт между log4j-slf4j-impl (встроен в jena-fuseki-server) и log4j-to-slf4j (из Spring Boot)",
+            "impact": "Приложение запускается с флагом -Dorg.springframework.boot.logging.LoggingSystem=none"
+          },
+          {
+            "decision": "Добавление транзакций TDB2 во все операции с Dataset",
+            "reason": "TDB2 требует использования транзакций для всех операций чтения и записи",
+            "impact": "Все методы SparqlService и DatasetInitializationService обёрнуты в транзакции (ReadWrite.READ/WRITE)"
+          }
+        ],
+        "artifacts": [
+          {
+            "type": "code",
+            "path": "code/backend/src/main/java/io/github/bondalen/feont/service/SparqlService.java",
+            "description": "Обновлён для использования транзакций TDB2"
+          },
+          {
+            "type": "code",
+            "path": "code/backend/src/main/java/io/github/bondalen/feont/service/DatasetInitializationService.java",
+            "description": "Обновлён для использования транзакций TDB2 при инициализации Named Graphs"
+          },
+          {
+            "type": "documentation",
+            "path": "docs/development/notes/chats/chat-plan/chat-plan-25-1130-launch.md",
+            "description": "План работы по запуску приложения"
+          }
+        ],
+        "results": {
+          "summary": "Приложение успешно запущено и работает. Исправлены проблемы с транзакциями TDB2 и конфликтом библиотек логирования. Все 5 Named Graphs инициализированы корректно, SPARQL endpoints работают без ошибок.",
+          "issuesFixed": 3,
+          "componentsUpdated": 2,
+          "status": "completed"
+        },
+        "nextSteps": [
+          "Проверка работы приложения в браузере",
+          "Тестирование всех функций frontend",
+          "Заполнение онтологии начальными данными"
+        ],
+        "references": [
+          "chat-plan-25-1130-launch.md",
+          "project-development.json",
           "modules.json"
         ]
       }

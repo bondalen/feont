@@ -83,7 +83,7 @@ public class SparqlController {
         }
     }
 
-    @PostMapping(value = "/sparql", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_SPARQL_QUERY})
+    @PostMapping(value = "/sparql", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, "application/sparql-query"})
     public ResponseEntity<String> sparqlQueryPost(
             @RequestParam(value = "query", required = false) String queryParam,
             @RequestBody(required = false) String queryBody,

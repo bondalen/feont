@@ -3,12 +3,12 @@
     "metadata": {
       "version": "2.0.0",
       "created": "2025-11-30",
-      "lastUpdated": "2025-11-30T19:50:00Z",
+      "lastUpdated": "2025-12-01T19:06:50Z",
       "description": "Планирование разработки FEONT"
     },
     "tasks": {
       "description": "Словарь всех задач проекта",
-      "nextTaskId": "0006",
+      "nextTaskId": "0008",
       "items": {
         "0001": {
           "id": "0001",
@@ -63,6 +63,32 @@
           "created": "2025-11-30",
           "completed": "2025-11-30",
           "type": "documentation"
+        },
+        "0007": {
+          "id": "0007",
+          "title": "Запуск приложения и исправление проблем",
+          "description": "Подготовка окружения, сборка frontend и backend, запуск приложения, исправление проблем с транзакциями TDB2 и конфликтом библиотек логирования",
+          "status": "completed",
+          "created": "2025-12-01",
+          "completed": "2025-12-01",
+          "type": "development",
+          "details": {
+            "issues": [
+              "Конфликт библиотек логирования (log4j-slf4j-impl vs log4j-to-slf4j)",
+              "Ошибка инициализации Named Graphs (TransactionException: Not in a transaction)",
+              "Ошибка SPARQL запросов (TransactionException: Not in a transaction)"
+            ],
+            "solutions": [
+              "Использование системного свойства -Dorg.springframework.boot.logging.LoggingSystem=none для обхода конфликта логирования",
+              "Добавление транзакций TDB2 (ReadWrite.WRITE) в DatasetInitializationService",
+              "Добавление транзакций TDB2 (ReadWrite.READ/WRITE) во все методы SparqlService"
+            ],
+            "results": [
+              "Приложение успешно запущено и работает",
+              "Все 5 Named Graphs инициализированы корректно",
+              "SPARQL endpoints работают без ошибок"
+            ]
+          }
         }
       }
     },
@@ -102,6 +128,11 @@
             {
               "taskId": "0006",
               "title": "Документация и финализация",
+              "children": []
+            },
+            {
+              "taskId": "0007",
+              "title": "Запуск приложения и исправление проблем",
               "children": []
             }
           ]

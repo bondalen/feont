@@ -1,6 +1,7 @@
 package io.github.bondalen.feont.service;
 
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -71,10 +72,13 @@ public class DatasetInitializationService {
     /**
      * Инициализация Named Graph
      * 
+     * TDB2 требует использования транзакций для операций записи.
+     * 
      * @param graphUri URI графа
      * @param description Описание графа
      */
     private void initializeGraph(String graphUri, String description) {
+        dataset.begin(ReadWrite.WRITE);
         try {
             Model model = dataset.getNamedModel(graphUri);
             if (model.isEmpty()) {
@@ -85,12 +89,17 @@ public class DatasetInitializationService {
                     model.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                     description);
                 
+                dataset.commit();
                 logger.debug("Инициализирован Named Graph: {} ({})", graphUri, description);
             } else {
+                dataset.commit();
                 logger.debug("Named Graph уже существует: {} ({})", graphUri, description);
             }
         } catch (Exception e) {
+            dataset.abort();
             logger.error("Ошибка инициализации Named Graph: {}", graphUri, e);
+        } finally {
+            dataset.end();
         }
     }
 }
