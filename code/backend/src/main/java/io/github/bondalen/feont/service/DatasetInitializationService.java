@@ -1,9 +1,10 @@
 package io.github.bondalen.feont.service;
 
+import io.github.bondalen.feont.config.OntologyConstants;
+
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class DatasetInitializationService {
             if (model.isEmpty()) {
                 // Добавляем базовую информацию о графе
                 Resource graphResource = model.createResource(graphUri);
-                model.add(graphResource, RDF.type, model.createResource("http://example.org/feont/NamedGraph"));
+                model.add(graphResource, RDF.type, model.createResource(OntologyConstants.NamedGraph));
                 model.add(graphResource, 
                     model.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                     description);

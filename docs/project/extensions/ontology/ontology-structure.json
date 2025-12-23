@@ -4,7 +4,7 @@
       "version": "1.0.0",
       "lastUpdated": "2025-11-30T20:30:00Z",
       "description": "Структура онтологии проекта FEONT",
-      "base_uri": "http://example.org/feont/",
+      "base_uri": "https://feont.ontoline.ru/ontology/",
       "note": "Онтология динамически изменяемая, структура будет расширяться по мере развития проекта"
     },
     "main_concepts": [

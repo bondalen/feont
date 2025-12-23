@@ -158,7 +158,8 @@ export default defineComponent({
         'http://www.w3.org/2000/01/rdf-schema#': 'rdfs:',
         'http://www.w3.org/2001/XMLSchema#': 'xsd:',
         'http://www.w3.org/2002/07/owl#': 'owl:',
-        'http://example.org/feont/': 'feont:',
+        'https://feont.ontoline.ru/ontology/': 'feont:',
+        'http://feont.ontoline.ru/ontology/': 'feont:', // Для локальной разработки без SSL
         'http://example.org/': 'ex:'
       }
 

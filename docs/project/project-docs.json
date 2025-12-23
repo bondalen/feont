@@ -6,7 +6,7 @@
       "description": "Приложение для работы с графом знаний: организационные структуры, технические структуры, планы работ",
       "author": "Александр",
       "created": "2025-11-30",
-      "lastUpdated": "2025-12-01T19:06:50Z",
+      "lastUpdated": "2025-12-23T21:00:00Z",
       "status": "development",
       "documentationRules": "docs/project-documentation-rules.md"
     },
@@ -142,14 +142,14 @@
     "ontology": {
       "description": "Онтология проекта (динамически изменяемая в реальном времени)",
       "version": "0.1.0",
-      "lastUpdated": "2025-11-30T18:36:22Z",
-      "base_uri": "http://example.org/feont/",
+      "lastUpdated": "2025-12-23T21:00:00Z",
+      "base_uri": "https://feont.ontoline.ru/ontology/",
       "dynamic_schema": true,
       "note": "Онтология может изменяться в процессе эксплуатации без миграций. Изменения фиксируются в urn:ontology:history.",
       "prefixes": {
         "feont": {
-          "uri": "http://example.org/feont/",
-          "description": "Префикс проекта FEONT для всех классов и свойств"
+          "uri": "https://feont.ontoline.ru/ontology/",
+          "description": "Префикс проекта FEONT для всех классов и свойств. Используется для разработки и production."
         },
         "rdf": {
           "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",

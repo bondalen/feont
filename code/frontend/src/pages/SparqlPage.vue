@@ -4,7 +4,10 @@
       <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
-            <div class="text-h6">SPARQL Query</div>
+            <div class="text-h6">SPARQL Query / Update</div>
+            <div class="text-caption text-grey-6 q-mt-xs">
+              Выберите тип запроса: SELECT, CONSTRUCT, ASK, DESCRIBE для чтения данных или UPDATE для изменения данных
+            </div>
           </q-card-section>
 
           <q-card-section>
@@ -56,7 +59,8 @@
               {{ error }}
             </div>
             <div v-else-if="result" class="result-container">
-              <pre class="q-pa-sm bg-grey-2 rounded-borders">{{ result }}</pre>
+              <pre v-if="queryType === 'UPDATE'" class="q-pa-sm bg-positive text-white rounded-borders">{{ result }}</pre>
+              <pre v-else class="q-pa-sm bg-grey-2 rounded-borders">{{ result }}</pre>
             </div>
             <div v-else class="text-grey-6 text-center">
               Результат появится здесь
@@ -70,7 +74,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { executeSelect, executeConstruct, executeAsk, executeDescribe } from 'src/services/sparql.service'
+import { executeSelect, executeConstruct, executeAsk, executeDescribe, executeUpdate } from 'src/services/sparql.service'
 import { useQuasar } from 'quasar'
 
 export default defineComponent({
@@ -87,7 +91,7 @@ WHERE {
 }
 LIMIT 10`)
     const queryType = ref('SELECT')
-    const queryTypes = ['SELECT', 'CONSTRUCT', 'ASK', 'DESCRIBE']
+    const queryTypes = ['SELECT', 'CONSTRUCT', 'ASK', 'DESCRIBE', 'UPDATE']
     const result = ref('')
     const loading = ref(false)
     const error = ref('')
@@ -123,6 +127,10 @@ LIMIT 10`)
           case 'DESCRIBE':
             response = await executeDescribe(query.value)
             result.value = response
+            break
+          case 'UPDATE':
+            await executeUpdate(query.value)
+            result.value = 'UPDATE запрос выполнен успешно. Данные обновлены.'
             break
         }
         $q.notify({

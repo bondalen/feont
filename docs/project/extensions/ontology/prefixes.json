@@ -2,14 +2,14 @@
   "prefixes": {
     "metadata": {
       "version": "1.0.0",
-      "lastUpdated": "2025-11-30T20:30:00Z",
+      "lastUpdated": "2025-12-23T21:00:00Z",
       "description": "Определение RDF префиксов для проекта FEONT"
     },
     "project": {
       "feont": {
-        "uri": "http://example.org/feont/",
+        "uri": "https://feont.ontoline.ru/ontology/",
         "description": "Префикс проекта FEONT для всех классов и свойств проекта",
-        "usage": "Основной префикс для доменных классов и свойств"
+        "usage": "Основной префикс для доменных классов и свойств. Используется для разработки и production."
       }
     },
     "standard": {
@@ -40,7 +40,7 @@
       }
     },
     "turtle_notation": [
-      "@prefix feont: <http://example.org/feont/> .",
+      "@prefix feont: <https://feont.ontoline.ru/ontology/> .",
       "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .",
       "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .",
       "@prefix owl: <http://www.w3.org/2002/07/owl#> .",
