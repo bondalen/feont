@@ -18,6 +18,7 @@ build/
 *.jar
 *.war
 *.ear
+dependency-reduced-pom.xml
 
 # Frontend build artifacts (copied to backend)
 code/backend/src/main/resources/static/
@@ -43,3 +44,19 @@ yarn-error.log*
 *.tmp
 *.temp
 .cache/
+
+# TDB2 database files (не коммитить данные!)
+data/tdb2/
+code/data/tdb2/
+*.lock
+
+# Quasar build cache
+.quasar/
+
+# Package lock files (можно коммитить, но часто игнорируют)
+# package-lock.json
+
+# Maven wrapper (опционально)
+.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd

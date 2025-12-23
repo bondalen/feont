@@ -43,9 +43,16 @@ public class SparqlController {
      */
     @GetMapping(value = "/sparql", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sparqlQueryGet(
-            @RequestParam("query") String query,
+            @RequestParam(value = "query", required = false) String query,
             @RequestParam(value = "format", defaultValue = "json") String format) {
         try {
+            // Если запрос не указан, возвращаем информацию о endpoint
+            if (query == null || query.trim().isEmpty()) {
+                return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"message\": \"SPARQL Query endpoint\", \"usage\": \"Use POST method with query parameter or GET with ?query=SPARQL_QUERY\"}");
+            }
+            
             logger.debug("SPARQL Query (GET): {}", query.substring(0, Math.min(100, query.length())));
             
             // Определение типа запроса
