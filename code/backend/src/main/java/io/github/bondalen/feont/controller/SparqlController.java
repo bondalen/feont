@@ -55,24 +55,33 @@ public class SparqlController {
             
             logger.debug("SPARQL Query (GET): {}", query.substring(0, Math.min(100, query.length())));
             
-            // Определение типа запроса
+            // Определение типа запроса (ищем первое ключевое слово, игнорируя PREFIX, BASE и т.д.)
             String queryUpper = query.trim().toUpperCase();
             String result;
             
-            if (queryUpper.startsWith("SELECT")) {
+            // Находим первое ключевое слово запроса (SELECT, CONSTRUCT, ASK, DESCRIBE)
+            // используя Pattern для поиска после директив PREFIX, BASE
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\b(SELECT|CONSTRUCT|ASK|DESCRIBE)\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+            java.util.regex.Matcher matcher = pattern.matcher(query);
+            String queryType = null;
+            if (matcher.find()) {
+                queryType = matcher.group(1).toUpperCase();
+            }
+            
+            if ("SELECT".equals(queryType)) {
                 result = sparqlService.executeSelect(query);
-            } else if (queryUpper.startsWith("CONSTRUCT")) {
+            } else if ("CONSTRUCT".equals(queryType)) {
                 result = sparqlService.executeConstruct(query);
                 format = "turtle";
-            } else if (queryUpper.startsWith("ASK")) {
+            } else if ("ASK".equals(queryType)) {
                 boolean askResult = sparqlService.executeAsk(query);
                 result = "{\"boolean\": " + askResult + "}";
-            } else if (queryUpper.startsWith("DESCRIBE")) {
+            } else if ("DESCRIBE".equals(queryType)) {
                 result = sparqlService.executeDescribe(query);
                 format = "turtle";
             } else {
                 return ResponseEntity.badRequest()
-                    .body("{\"error\": \"Неподдерживаемый тип SPARQL запроса\"}");
+                    .body("{\"error\": \"Неподдерживаемый тип SPARQL запроса. Ожидается SELECT, CONSTRUCT, ASK или DESCRIBE.\"}");
             }
             
             HttpHeaders headers = new HttpHeaders();
@@ -104,24 +113,33 @@ public class SparqlController {
             
             logger.debug("SPARQL Query (POST): {}", query.substring(0, Math.min(100, query.length())));
             
-            // Определение типа запроса
+            // Определение типа запроса (ищем первое ключевое слово, игнорируя PREFIX, BASE и т.д.)
             String queryUpper = query.trim().toUpperCase();
             String result;
             
-            if (queryUpper.startsWith("SELECT")) {
+            // Находим первое ключевое слово запроса (SELECT, CONSTRUCT, ASK, DESCRIBE)
+            // используя Pattern для поиска после директив PREFIX, BASE
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\b(SELECT|CONSTRUCT|ASK|DESCRIBE)\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+            java.util.regex.Matcher matcher = pattern.matcher(query);
+            String queryType = null;
+            if (matcher.find()) {
+                queryType = matcher.group(1).toUpperCase();
+            }
+            
+            if ("SELECT".equals(queryType)) {
                 result = sparqlService.executeSelect(query);
-            } else if (queryUpper.startsWith("CONSTRUCT")) {
+            } else if ("CONSTRUCT".equals(queryType)) {
                 result = sparqlService.executeConstruct(query);
                 format = "turtle";
-            } else if (queryUpper.startsWith("ASK")) {
+            } else if ("ASK".equals(queryType)) {
                 boolean askResult = sparqlService.executeAsk(query);
                 result = "{\"boolean\": " + askResult + "}";
-            } else if (queryUpper.startsWith("DESCRIBE")) {
+            } else if ("DESCRIBE".equals(queryType)) {
                 result = sparqlService.executeDescribe(query);
                 format = "turtle";
             } else {
                 return ResponseEntity.badRequest()
-                    .body("{\"error\": \"Неподдерживаемый тип SPARQL запроса\"}");
+                    .body("{\"error\": \"Неподдерживаемый тип SPARQL запроса. Ожидается SELECT, CONSTRUCT, ASK или DESCRIBE.\"}");
             }
             
             HttpHeaders headers = new HttpHeaders();

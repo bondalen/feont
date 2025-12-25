@@ -357,7 +357,7 @@ export default defineComponent({
       loading.value = true
 
       try {
-        // Пример запроса для получения данных графа
+        // Запрос для получения данных из Named Graphs (онтология и данные)
         const query = `
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -366,9 +366,19 @@ export default defineComponent({
             ?s ?p ?o
           }
           WHERE {
-            ?s ?p ?o
+            {
+              GRAPH <urn:ontology> {
+                ?s ?p ?o
+              }
+            }
+            UNION
+            {
+              GRAPH <urn:data> {
+                ?s ?p ?o
+              }
+            }
           }
-          LIMIT 50
+          LIMIT 200
         `
 
         const turtleData = await executeConstruct(query)
