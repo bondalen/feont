@@ -3,12 +3,12 @@
     "metadata": {
       "version": "2.0.0",
       "created": "2025-11-30",
-      "lastUpdated": "2025-12-23T21:00:00Z",
+      "lastUpdated": "2025-12-31T18:11:37Z",
       "description": "Планирование разработки FEONT"
     },
     "tasks": {
       "description": "Словарь всех задач проекта",
-      "nextTaskId": "0009",
+      "nextTaskId": "0010",
       "items": {
         "0001": {
           "id": "0001",
@@ -115,6 +115,42 @@
               "Добавлена возможность ограничения размера графа для производительности"
             ]
           }
+        },
+        "0009": {
+          "id": "0009",
+          "title": "Реализация динамической генерации форм на основе SHACL shapes",
+          "description": "Реализация функциональности динамической генерации форм для редактирования данных на основе SHACL shapes из графа urn:shacl:shapes",
+          "status": "planned",
+          "created": "2025-12-31",
+          "type": "development",
+          "priority": "medium",
+          "dependencies": [],
+          "relatedTasks": [],
+          "details": {
+            "approach": "shacl-form (HTML5 Web Component) или кастомное решение на @formkit/vue",
+            "frontend": {
+              "components": [
+                "ShaclForm.vue - компонент-обёртка для shacl-form",
+                "Страницы для редактирования данных с динамическими формами"
+              ],
+              "services": [
+                "shacl.service.js - сервис для работы с SHACL shapes"
+              ]
+            },
+            "backend": {
+              "endpoints": [
+                "GET /ds/shacl/shape/{classUri} - получение SHACL shape",
+                "POST /ds/shacl/validate - валидация данных"
+              ],
+              "services": [
+                "ShaclService.java - сервис для работы с SHACL"
+              ]
+            },
+            "references": [
+              "docs/development/notes/docs-preliminary/25-1231-shacl-form-tools-analysis.md"
+            ],
+            "note": "Эта задача дополняет workflow редактирования онтологии. Workflow для схемы, формы для данных."
+          }
         }
       }
     },
@@ -164,6 +200,12 @@
             {
               "taskId": "0008",
               "title": "Тестирование функциональности и реализация визуализации графов",
+              "children": []
+            },
+            {
+              "taskId": "0009",
+              "title": "Реализация динамической генерации форм на основе SHACL shapes",
+              "status": "planned",
               "children": []
             }
           ]

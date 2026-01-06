@@ -1,0 +1,67 @@
+{
+  "shacl_forms": {
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2025-12-31T18:11:37Z",
+      "description": "Конфигурация динамической генерации форм на основе SHACL shapes",
+      "status": "planned"
+    },
+    "architecture": {
+      "source": {
+        "graph": "urn:shacl:shapes",
+        "description": "SHACL shapes хранятся в Named Graph urn:shacl:shapes"
+      },
+      "frontend": {
+        "approach": "shacl-form (HTML5 Web Component) или кастомное решение",
+        "integration": "Vue.js 3 компонент-обёртка",
+        "styling": "Quasar Framework совместимость"
+      },
+      "backend": {
+        "endpoints": [
+          {
+            "path": "/ds/shacl/shape/{classUri}",
+            "method": "GET",
+            "description": "Получение SHACL shape для указанного класса",
+            "returns": "SHACL shape в формате Turtle/RDF"
+          },
+          {
+            "path": "/ds/shacl/validate",
+            "method": "POST",
+            "description": "Валидация данных через SHACL",
+            "returns": "ValidationReport"
+          }
+        ]
+      }
+    },
+    "tools_evaluation": {
+      "shacl_form": {
+        "status": "recommended",
+        "pros": [
+          "Быстрая интеграция",
+          "Совместимость с Vue.js 3",
+          "Прямая работа с SHACL shapes"
+        ],
+        "cons": [
+          "Требуется проверка актуальности проекта",
+          "Может потребоваться стилизация под Quasar"
+        ]
+      },
+      "custom_solution": {
+        "status": "alternative",
+        "pros": [
+          "Полный контроль над функциональностью",
+          "Использование @formkit/vue",
+          "Полная интеграция с Quasar"
+        ],
+        "cons": [
+          "Требует разработки парсера SHACL → FormKit schema",
+          "Больше времени на реализацию"
+        ]
+      }
+    },
+    "references": [
+      "docs/development/notes/docs-preliminary/25-1231-shacl-form-tools-analysis.md"
+    ]
+  }
+}
+

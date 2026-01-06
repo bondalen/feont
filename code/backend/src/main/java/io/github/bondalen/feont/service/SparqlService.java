@@ -3,6 +3,8 @@ package io.github.bondalen.feont.service;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -204,6 +206,73 @@ public class SparqlService {
         java.io.StringWriter writer = new java.io.StringWriter();
         model.write(writer, format);
         return writer.toString();
+    }
+
+    /**
+     * Замена данных в указанном Named Graph
+     * 
+     * Удаляет все существующие данные из графа и загружает новые из InputStream.
+     * TDB2 требует использования транзакций для операций записи.
+     * 
+     * @param graphUri URI Named Graph
+     * @param dataStream InputStream с данными в формате RDF
+     * @param format Формат данных (TURTLE, RDF/XML, JSON-LD)
+     * @return Количество загруженных триплетов
+     */
+    public long replaceGraphData(String graphUri, java.io.InputStream dataStream, String format) {
+        dataset.begin(ReadWrite.WRITE);
+        try {
+            // Получаем модель графа (создаётся автоматически, если не существует)
+            Model model = dataset.getNamedModel(graphUri);
+            
+            // Удаляем все существующие данные из графа
+            model.removeAll();
+            
+            // Загружаем новые данные из InputStream
+            Lang lang = parseFormat(format);
+            RDFDataMgr.read(model, dataStream, lang);
+            
+            // Подсчитываем количество триплетов
+            long tripleCount = model.size();
+            
+            dataset.commit();
+            logger.debug("Данные в графе {} заменены. Загружено триплетов: {}", graphUri, tripleCount);
+            return tripleCount;
+        } catch (Exception e) {
+            dataset.abort();
+            logger.error("Ошибка замены данных в Named Graph: {}", graphUri, e);
+            throw new RuntimeException("Ошибка замены данных: " + e.getMessage(), e);
+        } finally {
+            dataset.end();
+        }
+    }
+
+    /**
+     * Парсинг формата данных в Lang для Apache Jena
+     */
+    private Lang parseFormat(String format) {
+        String formatUpper = format.toUpperCase();
+        switch (formatUpper) {
+            case "TURTLE":
+            case "TTL":
+                return Lang.TURTLE;
+            case "RDF":
+            case "XML":
+            case "RDF/XML":
+                return Lang.RDFXML;
+            case "JSON":
+            case "JSONLD":
+            case "JSON-LD":
+                return Lang.JSONLD;
+            case "N3":
+                return Lang.N3;
+            case "NTRIPLES":
+            case "NT":
+                return Lang.NTRIPLES;
+            default:
+                logger.warn("Неизвестный формат {}, используется TURTLE по умолчанию", format);
+                return Lang.TURTLE;
+        }
     }
 
     /**

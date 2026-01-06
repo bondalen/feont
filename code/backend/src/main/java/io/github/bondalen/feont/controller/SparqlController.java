@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * REST контроллер для SPARQL endpoints
@@ -218,6 +221,87 @@ public class SparqlController {
             logger.error("Ошибка получения данных", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    /**
+     * Экспорт онтологии для внешних редакторов
+     * 
+     * GET /ontology
+     * Возвращает онтологию из графа urn:ontology в формате Turtle.
+     * Упрощённый endpoint без параметров для удобного использования в Protege Desktop
+     * (File → Open from URL).
+     */
+    @GetMapping(value = "/ontology", produces = "text/turtle")
+    public ResponseEntity<String> getOntology() {
+        try {
+            logger.debug("Экспорт онтологии из графа urn:ontology");
+            
+            String result = sparqlService.getGraphData("urn:ontology", "TURTLE");
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf("text/turtle"));
+            
+            return ResponseEntity.ok().headers(headers).body(result);
+        } catch (Exception e) {
+            logger.error("Ошибка экспорта онтологии", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("# Ошибка экспорта онтологии: " + e.getMessage() + "\n");
+        }
+    }
+
+    /**
+     * Импорт онтологии из файла
+     * 
+     * POST /ontology/import
+     * Загружает онтологию из файла и заменяет содержимое графа urn:ontology.
+     * Поддерживает форматы: Turtle, RDF/XML, JSON-LD.
+     * 
+     * @param file Файл с онтологией
+     * @param format Формат файла (turtle, rdf, xml, jsonld). По умолчанию: turtle
+     * @return JSON с информацией о результате импорта
+     */
+    @PostMapping(value = "/ontology/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> importOntology(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "format", defaultValue = "turtle") String format) {
+        try {
+            // Проверка наличия файла
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body("{\"error\": \"Файл не указан или пуст\"}");
+            }
+            
+            logger.debug("Импорт онтологии из файла: {} (format: {})", file.getOriginalFilename(), format);
+            
+            // Загрузка данных в граф
+            long tripleCount = sparqlService.replaceGraphData("urn:ontology", file.getInputStream(), format);
+            
+            // Формирование ответа
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode response = mapper.createObjectNode();
+            response.put("status", "success");
+            response.put("message", "Онтология успешно импортирована");
+            response.put("triples", tripleCount);
+            response.put("filename", file.getOriginalFilename());
+            response.put("format", format);
+            
+            logger.info("Онтология успешно импортирована. Загружено триплетов: {}", tripleCount);
+            
+            return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        } catch (Exception e) {
+            logger.error("Ошибка импорта онтологии", e);
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode errorResponse = mapper.createObjectNode();
+                errorResponse.put("status", "error");
+                errorResponse.put("error", "Ошибка импорта онтологии: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(mapper.writeValueAsString(errorResponse));
+            } catch (Exception jsonException) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"Ошибка импорта онтологии: " + e.getMessage() + "\"}");
+            }
         }
     }
 

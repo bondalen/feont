@@ -67,16 +67,56 @@ export default defineComponent({
           {
             selector: 'node',
             style: {
-              'background-color': '#666',
+              'background-color': '#757575',
               'label': 'data(label)',
-              'width': 30,
-              'height': 30,
+              'width': 70,
+              'height': 70,
               'font-size': '12px',
               'text-valign': 'center',
               'text-halign': 'center',
               'color': '#fff',
               'text-wrap': 'wrap',
-              'text-max-width': '80px'
+              'text-max-width': '120px',
+              'text-outline-width': 2,
+              'text-outline-color': '#000000',
+              'text-outline-opacity': 0.8,
+              'font-weight': '600',
+              'border-width': 2,
+              'shape': 'ellipse'
+            }
+          },
+          // Стили для классов (rdfs:Class)
+          {
+            selector: 'node[isClass = "true"]',
+            style: {
+              'background-color': '#2196F3',
+              'border-color': '#1976D2',
+              'width': 80,
+              'height': 50,
+              'shape': 'round-rectangle'
+            }
+          },
+          // Стили для свойств (rdf:Property)
+          {
+            selector: 'node[isProperty = "true"]',
+            style: {
+              'background-color': '#FF9800',
+              'border-color': '#F57C00',
+              'width': 70,
+              'height': 70,
+              'shape': 'diamond'
+            }
+          },
+          // Стили для экземпляров (instances)
+          {
+            selector: 'node[isInstance = "true"]',
+            style: {
+              'background-color': '#4CAF50',
+              'border-color': '#388E3C',
+              'width': 60,
+              'height': 60,
+              'shape': 'ellipse',
+              'border-width': 1
             }
           },
           // Стили для узлов типа Blank Node
@@ -89,36 +129,24 @@ export default defineComponent({
               'border-color': '#555'
             }
           },
-          // Стили для узлов типа NamedNode
-          {
-            selector: 'node[type = "NamedNode"]',
-            style: {
-              'background-color': '#4A90E2',
-              'shape': 'ellipse'
-            }
-          },
-          // Стили для узлов с типом rdf:type
-          {
-            selector: 'node[hasType = "true"]',
-            style: {
-              'background-color': '#50C878',
-              'border-width': 3,
-              'border-color': '#2E8B57'
-            }
-          },
           // Стили для рёбер
           {
             selector: 'edge',
             style: {
               'width': 2,
-              'line-color': '#999',
-              'target-arrow-color': '#999',
+              'line-color': '#9E9E9E',
+              'target-arrow-color': '#9E9E9E',
               'target-arrow-shape': 'triangle',
               'label': 'data(label)',
               'curve-style': 'bezier',
               'font-size': '10px',
               'text-rotation': 'autorotate',
-              'text-margin-y': -10
+              'text-margin-y': -10,
+              'text-background-color': 'rgba(255, 255, 255, 0.9)',
+              'text-background-opacity': 0.9,
+              'text-background-padding': '3px',
+              'text-border-width': 1,
+              'text-border-color': '#CCCCCC'
             }
           },
           // Стили для рёбер типа rdf:type
@@ -126,9 +154,39 @@ export default defineComponent({
             selector: 'edge[predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"]',
             style: {
               'width': 3,
-              'line-color': '#50C878',
-              'target-arrow-color': '#50C878',
+              'line-color': '#4CAF50',
+              'target-arrow-color': '#4CAF50',
               'line-style': 'dashed'
+            }
+          },
+          // Стили для рёбер rdfs:domain и rdfs:range
+          {
+            selector: 'edge[predicate = "http://www.w3.org/2000/01/rdf-schema#domain"], edge[predicate = "http://www.w3.org/2000/01/rdf-schema#range"]',
+            style: {
+              'width': 2.5,
+              'line-color': '#FF9800',
+              'target-arrow-color': '#FF9800',
+              'line-style': 'solid'
+            }
+          },
+          // Стили для рёбер rdfs:label и rdfs:comment
+          {
+            selector: 'edge[predicate = "http://www.w3.org/2000/01/rdf-schema#label"], edge[predicate = "http://www.w3.org/2000/01/rdf-schema#comment"]',
+            style: {
+              'width': 2,
+              'line-color': '#9C27B0',
+              'target-arrow-color': '#9C27B0',
+              'line-style': 'dotted'
+            }
+          },
+          // Стили для рёбер свойств онтологии (feont:*)
+          {
+            selector: 'edge[predicate *= "feont.ontoline.ru/ontology/"]',
+            style: {
+              'width': 2.5,
+              'line-color': '#2196F3',
+              'target-arrow-color': '#2196F3',
+              'line-style': 'solid'
             }
           }
         ],
@@ -235,6 +293,9 @@ export default defineComponent({
 
       // Первый проход: сбор информации о типах узлов (rdf:type)
       const nodeTypes = new Map() // Map<nodeId, Set<types>>
+      const rdfsClass = 'http://www.w3.org/2000/01/rdf-schema#Class'
+      const rdfProperty = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'
+      
       triples.forEach((triple) => {
         if (triple.predicate === rdfType && 
             (triple.subjectType === 'NamedNode' || triple.subjectType === 'BlankNode') &&
@@ -256,12 +317,20 @@ export default defineComponent({
         // Добавляем субъект как узел (если это NamedNode или BlankNode, не Literal)
         if (triple.subjectType === 'NamedNode' || triple.subjectType === 'BlankNode') {
           if (!nodeSet.has(subject)) {
+            const types = nodeTypes.get(subject) || new Set()
+            const isClass = types.has(rdfsClass)
+            const isProperty = types.has(rdfProperty)
+            const isInstance = !isClass && !isProperty && types.size > 0
+            
             nodeSet.set(subject, {
               id: subject,
               label: shortenUri(subject),
               uri: subject,
               type: triple.subjectType,
-              hasType: nodeTypes.has(subject)
+              hasType: nodeTypes.has(subject),
+              isClass: isClass,
+              isProperty: isProperty,
+              isInstance: isInstance
             })
           }
         }
@@ -270,12 +339,20 @@ export default defineComponent({
         // Литералы исключаются из визуализации
         if (triple.objectType === 'NamedNode' || triple.objectType === 'BlankNode') {
           if (!nodeSet.has(object)) {
+            const types = nodeTypes.get(object) || new Set()
+            const isClass = types.has(rdfsClass)
+            const isProperty = types.has(rdfProperty)
+            const isInstance = !isClass && !isProperty && types.size > 0
+            
             nodeSet.set(object, {
               id: object,
               label: shortenUri(object),
               uri: object,
               type: triple.objectType,
-              hasType: nodeTypes.has(object)
+              hasType: nodeTypes.has(object),
+              isClass: isClass,
+              isProperty: isProperty,
+              isInstance: isInstance
             })
           }
 
@@ -294,7 +371,10 @@ export default defineComponent({
           label: node.label,
           uri: node.uri,
           type: node.type,
-          hasType: node.hasType ? 'true' : 'false'
+          hasType: node.hasType ? 'true' : 'false',
+          isClass: node.isClass ? 'true' : 'false',
+          isProperty: node.isProperty ? 'true' : 'false',
+          isInstance: node.isInstance ? 'true' : 'false'
         }
       }))
 

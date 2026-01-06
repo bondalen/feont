@@ -6,7 +6,7 @@
       "description": "Приложение для работы с графом знаний: организационные структуры, технические структуры, планы работ",
       "author": "Александр",
       "created": "2025-11-30",
-      "lastUpdated": "2025-12-23T21:00:00Z",
+      "lastUpdated": "2025-12-31T18:11:37Z",
       "status": "development",
       "documentationRules": "docs/project-documentation-rules.md"
     },
@@ -20,7 +20,15 @@
         "storage": "Apache Jena TDB2 (triple store)",
         "api": "SPARQL 1.1 через REST API (Spring Boot контроллеры)",
         "validation": "Apache Jena SHACL",
-        "reasoning": "Apache Jena Inference (RDFS/OWL) - опционально"
+        "reasoning": "Apache Jena Inference (RDFS/OWL) - опционально",
+        "api_endpoints": {
+          "sparql": "GET/POST /ds/sparql - SPARQL Query (SELECT, CONSTRUCT, ASK, DESCRIBE)",
+          "sparql_update": "POST /ds/update - SPARQL Update",
+          "data": "GET /ds/data - доступ к данным Named Graphs",
+          "ontology_export": "GET /ds/ontology - экспорт онтологии в формате Turtle",
+          "ontology_import": "POST /ds/ontology/import - импорт онтологии из файла",
+          "health": "GET /health - проверка статуса приложения"
+        }
       },
       "frontend": {
         "framework": "Vue.js 3",
@@ -29,7 +37,22 @@
         "ontology_visualization": "WebVOWL",
         "sparql_ui": "YASGUI",
         "rdf_libraries": "rdflib.js, n3, jsonld",
-        "forms": "@formkit/vue"
+        "forms": {
+          "library": "@formkit/vue",
+          "status": "current",
+          "dynamic_generation": {
+            "status": "planned",
+            "description": "Динамическая генерация форм на основе SHACL shapes",
+            "source": "SHACL shapes из графа urn:shacl:shapes",
+            "approach": {
+              "primary": "shacl-form (HTML5 Web Component)",
+              "alternative": "Кастомное решение на @formkit/vue + SHACL парсер"
+            },
+            "references": [
+              "docs/development/notes/docs-preliminary/25-1231-shacl-form-tools-analysis.md"
+            ]
+          }
+        }
       },
       "knowledge_graph": {
         "format": "RDF (Turtle, JSON-LD)",
@@ -51,7 +74,11 @@
           "shacl": {
             "uri": "urn:shacl:shapes",
             "description": "SHACL shapes для валидации данных",
-            "purpose": "Хранение правил валидации, которые применяются к данным. Shapes могут изменяться независимо от онтологии."
+            "purpose": "Хранение правил валидации, которые применяются к данным. Shapes могут изменяться независимо от онтологии.",
+            "future_usage": [
+              "Валидация данных (текущее использование)",
+              "Динамическая генерация форм для редактирования данных (планируется)"
+            ]
           },
           "history": {
             "uri": "urn:ontology:history",
@@ -123,7 +150,31 @@
           "ontology_editor": {
             "name": "Protégé Desktop",
             "description": "Десктопное приложение для создания и редактирования онтологий",
-            "usage": "Для визуального моделирования онтологии вне приложения (опционально)"
+            "usage": "Для визуального моделирования онтологии вне приложения через файловый workflow",
+            "workflow": {
+              "type": "file-based",
+              "description": "Экспорт → редактирование в Protege → импорт",
+              "documentation": "docs/usage/ontology-editing-workflow.md",
+              "endpoints": {
+                "export": "GET /ds/ontology",
+                "import": "POST /ds/ontology/import"
+              }
+            }
+          },
+          "form_generation": {
+            "status": "planned",
+            "description": "Динамическая генерация форм на основе SHACL shapes",
+            "tools": [
+              {
+                "name": "shacl-form",
+                "type": "HTML5 Web Component",
+                "status": "recommended",
+                "integration": "Vue.js 3 компонент-обёртка"
+              }
+            ],
+            "references": [
+              "docs/development/notes/docs-preliminary/25-1231-shacl-form-tools-analysis.md"
+            ]
           },
           "visualization": {
             "libraries": ["Cytoscape.js", "WebVOWL"],
@@ -136,6 +187,28 @@
               "features": ["Отображение классов и свойств", "Редактирование онтологии"]
             }
           }
+        }
+      },
+      "planned_features": {
+        "dynamic_form_generation": {
+          "status": "planned",
+          "priority": "medium",
+          "description": "Динамическая генерация форм на основе SHACL shapes для редактирования данных",
+          "frontend": {
+            "library": "@formkit/vue",
+            "approach": "shacl-form (HTML5 Web Component) или кастомное решение",
+            "integration": "Vue.js 3 компонент-обёртка для shacl-form"
+          },
+          "backend": {
+            "endpoints": [
+              "GET /ds/shacl/shape/{classUri} - получение SHACL shape для класса",
+              "POST /ds/shacl/validate - валидация данных через SHACL"
+            ],
+            "source": "SHACL shapes из графа urn:shacl:shapes"
+          },
+          "references": [
+            "docs/development/notes/docs-preliminary/25-1231-shacl-form-tools-analysis.md"
+          ]
         }
       }
     },
